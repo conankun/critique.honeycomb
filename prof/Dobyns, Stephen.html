@@ -1,0 +1,517 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black"> 
+	<title>IRP Self-Service Reports</title>
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script type="text/javascript">
+var EWR_YUI_HOST = "yui290/";
+
+function ewr_GetScript(url) { document.write("<" + "script type=\"text/javascript\" src=\"" + url + "\"><" + "/script>"); }
+
+function ewr_GetCss(url) { document.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + url + "\">"); }
+if (!window.YAHOO) ewr_GetScript(EWR_YUI_HOST + "build/utilities/utilities.js");
+</script>
+<script type="text/javascript">
+if (!YAHOO.env.getVersion("button")) ewr_GetCss(EWR_YUI_HOST + "build/button/assets/skins/sam/button.css");
+if (!YAHOO.env.getVersion("container")) ewr_GetCss(EWR_YUI_HOST + "build/container/assets/skins/sam/container.css");
+if (!YAHOO.env.getVersion("resize")) ewr_GetCss(EWR_YUI_HOST + "build/resize/assets/skins/sam/resize.css");
+</script>
+<link href="phprptcss/irp_ss.css" rel="stylesheet" type="text/css">
+<script type="text/javascript">if (!YAHOO.env.getVersion("json")) ewr_GetScript(EWR_YUI_HOST + "build/json/json-min.js");</script>
+<script type="text/javascript">if (!YAHOO.env.getVersion("button")) ewr_GetScript(EWR_YUI_HOST + "build/button/button-min.js");</script>
+<script type="text/javascript">if (!YAHOO.env.getVersion("datasource")) ewr_GetScript("phprptjs/datenumber-min.js");</script>
+<script type="text/javascript">
+var EWR_LANGUAGE_ID = "en";
+var EWR_DATE_SEPARATOR = "/" || "/"; // Default date separator
+var EWR_DECIMAL_POINT = ".";
+var EWR_THOUSANDS_SEP = "";
+var EWR_DISABLE_BUTTON_ON_SUBMIT = true;
+var EWR_IMAGES_FOLDER = "phprptimages/"; // Image folder
+
+// Ajax settings
+var EWR_RECORD_DELIMITER = "\r";
+var EWR_FIELD_DELIMITER = "\t";
+var EWR_LOOKUP_FILE_NAME = "ewrajax6.php"; // Lookup file name
+var EWR_AUTO_SUGGEST_MAX_ENTRIES = 10; // Auto-Suggest max entries
+</script>
+<script type="text/javascript">
+if (!YAHOO.env.getVersion("container")) ewr_GetScript(EWR_YUI_HOST + "build/container/container-min.js");
+if (!YAHOO.env.getVersion("resize")) ewr_GetScript(EWR_YUI_HOST + "build/resize/resize-min.js");
+</script>
+<script type="text/javascript">if (!window.jQuery) ewr_GetScript("jquery/jquery-1.8.2.min.js");</script>
+<script type="text/javascript" src="phprptjs/ewr6.js"></script>
+<script type="text/javascript">
+var ewLanguage = new ewr_Language({"browsernoflashsupport":"Your browser does not support Flash player.","cancelbtn":"Cancel","entersenderemail":"Please enter sender email","enterpropersenderemail":"Exceed maximum sender email count or email address incorrect","enterrecipientemail":"Please enter recipient email","enterproperrecipientemail":"Exceed maximum recipient email count or email address incorrect","enterproperccemail":"Exceed maximum cc email count or email address incorrect","enterproperbccemail":"Exceed maximum bcc email count or email address incorrect","entersubject":"Please enter subject","enterpassword":"Please enter password","enterpwd":"Please enter password","enteruid":"Please enter user ID","entervalidatecode":"Please enter the validation code shown","exportchart":"Exporting chart: ","exportchartdata":"Exporting chart data","exportcharterror":"Failed to export chart: ","exportingchart":"Exporting chart (%c of %t), please wait...","exporttoemail":"Email","incorrectcreditcard":"Incorrect credit card number","incorrectemail":"Incorrect email","incorrectfield":"Incorrect field","incorrectfloat":"Incorrect floating point number","incorrectguid":"Incorrect GUID","incorrectinteger":"Incorrect integer","incorrectphone":"Incorrect phone number","incorrectrange":"Number must be between %1 and %2","incorrectregexp":"Regular expression not matched","incorrectssn":"Incorrect Social Security Number","incorrecttime":"Incorrect time (hh:mm:ss)","incorrectzip":"Incorrect ZIP code","loading":"Loading%s...","messageok":"OK","popupall":"(All)","popupcancel":"Cancel","popupfrom":"From","popupnovalue":"No value selected!","popupok":"  OK  ","popupselect":"Please Select","popupto":"To","sendemailbtn":"Send","sendemailsuccess":"Email sent successfully"});</script>
+<script type="text/javascript" src="API/js/query_cookbook.js"></script>
+<script src="FusionCharts/JSClass/FusionCharts.js" type="text/javascript"></script>
+<script src="FusionChartsFree/JSClass/FusionCharts.js" type="text/javascript"></script>
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/base/jquery-ui.css">	
+<link rel="stylesheet" type="text/css" href="styles/royal_preloader.css">
+<link rel="stylesheet" type="text/css" href="styles/irp_custom.css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+<!-- Twitter Bootstrap using LESS -->
+<script src="js/bootstrap.min.js"></script>
+<link href="less/styles.less" rel="stylesheet/less" type="text/css">
+<script type="text/javascript">
+	less = {
+		env: "development"
+	};
+</script>
+<!-- LESS.js -->
+<script src="js/less.min.js" type="text/javascript"></script>
+<!-- custom js functions -->
+<script type="text/javascript" src="scripts/royal_preloader.min.js"></script>
+<script type="text/javascript" src="scripts/irp_custom.js"></script>
+<script type="text/javascript">
+
+    // preloader config
+    Royal_Preloader.config({
+        mode: "text",
+        timeout: 0,
+        text: "Loading report...",
+        opacity: 0.8,
+        background: ['#000000']
+    });
+</script>
+<meta name="generator" content="PHP Report Maker v6.0.0">
+</head>
+<body class="yui-skin-sam royal_loader" id="top>
+<div class="navbar-wrapper">
+	<div class="container">
+		<div class="alert alert-info alert-block">
+			<button type="button" class="close" data-dismiss="alert">&times; <small>Close</small></button>
+			<h5>You are currently in the self-service section</h5>
+			<a href="http://irp.gatech.edu" style="color: #EEE"><i class="icon-home icon-white"></i> Return to main IRP site</a>
+		</div>
+		<div class="navbar">
+    		<div class="navbar-inner">
+            	<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              		<span class="icon-bar"></span>
+              		<span class="icon-bar"></span>
+              		<span class="icon-bar"></span>
+            		</button>
+            	<a class="brand" href="index.php"><img src="images/gt_logo_48x100.png" style="margin-right: 6px;"/>Self Service Reports</a>
+	            <div class="nav-collapse collapse">
+	            	<ul class="nav">
+	                	<!--<li><a href="/reports"><i class="icon-home icon-white"></i> Home</a></li>-->
+						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Enrollment<b class="caret"></b> </a>  
+							<ul class="dropdown-menu">  
+								<li><a href="enrollment_by_collegectb.php">By College</a></li>  
+								<li><a href="enrollment_by_college_2d_ftectb.php">By College - FTE</a></li> 
+								<li><a href="enrollment_by_majorctb.php">By Major</a></li>  
+								<li><a href="enrollment_by_major_2d_ftectb.php">By Major - FTE</a></li>
+								<li><a href="enrollment_by_demographic_allctb.php">By Demographic</a></li> 
+								<li><a href="enrollment_by_demographicctb.php">By Demographic/Citizenship</a></li> 
+								<li><a href="enrollment_by_student_typectb.php">By Student Type</a></li>
+								<li><a href="enrollment_by_residencyctb.php">By Residency</a></li> 		
+								<li><a href="enrollment_by_campus_typectb.php">By Campus</a></li>									
+							</ul>  
+						</li>  
+						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Degrees Awarded<b class="caret"></b> </a>  
+							<ul class="dropdown-menu">  
+								<li><a href="degrees_by_collegectb.php">By College and Major</a></li> 
+								<li><a href="degrees_by_genderctb.php">By Gender</a></li>  
+								<li><a href="degrees_by_demographicsctb.php">By Demographic</a></li>
+								<li><a href="degrees_by_ga_countysmry.php">By Georgia County</a></li>  
+								<li><a href="degrees_by_us_statesmry.php">By State</a></li>  
+								<li><a href="degrees_by_country_of_residencesmry.php">By Country</a></li> 
+							</ul>  
+						</li> 
+						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Academics<b class="caret"></b> </a>  
+							<ul class="dropdown-menu">  
+								<li><a href="credit_hourssmry.php">Credit Hours</a></li>
+								<li><a href="grade_distributionsmry.php">Grade Distribution</a></li> 
+								<li><a href="grade_distribution_2d_percentagesmry.php">Grade Distribution - Percentage</a></li>
+								<li><a href="grades_by_instructorsmry.php">Grade Distribution - Instructor Search</a></li>
+							</ul>  
+						</li> 
+						<li><a href="staff_reportctb.php">Staff Report</a></li>
+					</ul>
+					<ul class="nav pull-right">		
+												<li><a href="?logout"><i class="icon-off icon-white"></i> Logout</a></li>
+											</ul>  
+	            </div><!--/.nav-collapse -->
+			</div><!-- /.navbar-inner -->
+		</div><!-- /.navbar -->
+	</div> <!-- /.container -->
+</div><!-- /.navbar-wrapper -->
+<div class="container">
+	<div class="row-fluid" >
+		<div class="span12 well">
+<script type="text/javascript">
+
+// Create page object
+var Grades_by_Instructor_summary = new ewr_Page("Grades_by_Instructor_summary");
+
+// page properties
+Grades_by_Instructor_summary.PageID = "summary"; // page ID
+var EWR_PAGE_ID = Grades_by_Instructor_summary.PageID;
+
+// extend page with Chart_Rendering function
+Grades_by_Instructor_summary.Chart_Rendering =  
+ function(chart, chartid) { // DO NOT CHANGE THIS LINE!
+
+ 	//alert(chartid);
+ }
+
+// extend page with Chart_Rendered function
+Grades_by_Instructor_summary.Chart_Rendered =  
+ function(chart, chartid) { // DO NOT CHANGE THIS LINE!
+
+ 	//alert(chartid);
+ }
+</script>
+<script type="text/javascript">
+
+// Form object
+var fGrades_by_Instructorsummary = new ewr_Form("fGrades_by_Instructorsummary");
+
+// Validate method
+fGrades_by_Instructorsummary.Validate = function(fobj) {
+	if (!this.ValidateRequired)
+		return true; // ignore validation
+	this.PostAutoSuggest();
+
+	// Call Form Custom Validate event
+	if (!this.Form_CustomValidate(fobj)) return false;
+	return true;
+}
+
+// Form_CustomValidate method
+fGrades_by_Instructorsummary.Form_CustomValidate =  
+ function(fobj) { // DO NOT CHANGE THIS LINE!
+
+ 	// Your custom validation code here, return false if invalid. 
+ 	return true;
+ }
+fGrades_by_Instructorsummary.ValidateRequired = false; // no JavaScript validation
+
+// Use Ajax
+fGrades_by_Instructorsummary.Lists["sv_INSTRUCTOR"] = {"LinkField":"sv_INSTRUCTOR","DisplayFields":["sv_INSTRUCTOR","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+fGrades_by_Instructorsummary.Lists["sv_TERM_CODE"] = {"LinkField":"sv_TERM_CODE","DisplayFields":["sv_TERM_CODE","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+</script>
+<script type="text/javascript">
+
+// Write your client script here, no need to add script tags.
+</script>
+<div id="ewrPopupFilterDiv"><div class="bd"></div></div>
+<script type="text/javascript">
+ewr_InitPopupFilter(); // Init popup filter
+</script>
+<!-- Table Container (Begin) -->
+<table id="ewContainer" class="ewStdTable">
+<!-- Top Container (Begin) -->
+<tr><td colspan="3"><div id="ewTop" class="phpreportmaker">
+<a id="top"></a>
+<!-- top slot -->
+<p class="ewSpacer"><span id="ewPageCaption" class="ewTitle ewTableTitle"><h4>Grade Distribution - Instructor Search</h4>&nbsp;&nbsp;</span><span class="ewExportOption"><a href="javascript:void(0);" onclick="ewr_ExportCharts(this, 'grades_by_instructorsmry.php?export=excel','ST-1401022-AbqwT1eS3GdMKJTaXeie-cas-prod6gatechedu');">Export to Excel</a></span><span class="ewExportOption"><a href="grades_by_instructorsmry.php?cmd=reset">Reset all filters</a></span></p>
+<div class="ewSpacer"><span class="phpreportmaker">
+		<div id="loading-warning-instructor" class="alert alert-warning span8">
+	  		<button type="button" class="close" data-dismiss="alert">&times;</button>
+	  		<strong>Loading Instructor and Term options. Please wait... <i class="fa fa-refresh fa-spin"></i></strong>
+		</div></span></div><div class="ewMessageDialog"></div></div></td></tr>
+<!-- Top Container (End) -->
+<tr>
+	<!-- Left Container (Begin) -->
+	<td style="vertical-align: top;"><div id="ewLeft" class="phpreportmaker">
+	<!-- Left slot -->
+	</div></td>
+	<!-- Left Container (End) -->
+	<!-- Center Container - Report (Begin) -->
+	<td style="vertical-align: top;" class="ewPadding"><div id="ewCenter" class="phpreportmaker">
+	<!-- center slot -->
+<!-- summary report starts -->
+<div id="report_summary">
+<!-- Search form (begin) -->
+<form name="fGrades_by_Instructorsummary" id="fGrades_by_Instructorsummary" class="ewForm ewExtFilterForm" action="grades_by_instructorsmry.php" onsubmit="return ewrForms[this.id].Submit();">
+<input type="hidden" name="cmd" value="search">
+<a href="javascript:fGrades_by_Instructorsummary.ToggleSearchPanel();" style="text-decoration: none;"><img id="fGrades_by_Instructorsummary_SearchImage" src="phprptimages/collapse.gif" width="9" height="9" alt="" style="border: 0;"></a><span class="phpreportmaker">&nbsp;Filters</span>
+<div id="fGrades_by_Instructorsummary_SearchPanel">
+<table class="ewRptExtFilter">
+	<tr id="r_INSTRUCTOR">
+		<td><span class="ewSearchCaption">INSTRUCTOR</span></td>
+		<td></td>
+		<td colspan="4">
+<select id="sv_INSTRUCTOR" name="sv_INSTRUCTOR">
+<option value="">Please Select</option>
+<option value="Dobyns, Stephen" selected="selected">Dobyns, Stephen</option>
+</select>
+<input type="hidden" name="s_sv_INSTRUCTOR" id="s_sv_INSTRUCTOR" value="s=yoK17_0fCCJueLM38cJpPpxNj2yb65nB97aqFgtmQaxfEid803gYmWoEI-WX6hdzJZvV6bL4Pn6uCNAUZToipLo0ndcGLxhbtcX-6b0t0Pqb6tPNumkw6JV1xjTu5_kB1ZQvQ-abGQIEHDVfAwiXUMvQC7RVIknP7zhxcQ..&fn=&f0=yN4s3Uy5b7meZBxC_b7xqvvtyAVoaaU0MLbPxhGJVzDXkTue&t0=202&ds=&df=0&dlm="></td>
+	</tr>
+	<tr id="r_TERM_CODE">
+		<td><span class="ewSearchCaption">TERM</span></td>
+		<td></td>
+		<td colspan="4">
+<select id="sv_TERM_CODE" name="sv_TERM_CODE">
+<option value="">Please Select</option>
+</select>
+<input type="hidden" name="s_sv_TERM_CODE" id="s_sv_TERM_CODE" value="s=mXf9jn_u044QYVUjgCz5rl2Sypwq28bnTlwtPSKJ4GLM9FaQaGD8GHSn6q06oQjwcq05e3tD2x0HAmme5Guv5FmXONSAuih6DAt2GDxzryu8dr-JuPZKXf7L3TvoEq8oiMNB-doBe9WTHGktPmuGw5bdtNbXvlkKuUDy5uknBlA.&fn=&f0=_jyFiAPvUTT-HvCjOeY8LyCctBYVEmBJxMzBZYwtu7I.&t0=202&ds=&df=0&dlm="></td>
+	</tr>
+</table>
+<table class="ewRptExtFilter">
+	<tr>
+		<td><span class="phpreportmaker">
+			<input type="Submit" name="Submit" id="Submit" value="Search">&nbsp;
+			<input type="Reset" name="Reset" id="Reset" value="Reset" style="display:none;">&nbsp;
+		</span></td>
+	</tr>
+</table>
+</div>
+</form>
+<script type="text/javascript">
+fGrades_by_Instructorsummary.Init();
+</script>
+<!-- Search form (end) -->
+<table><tr><td><div id="ewrFilterList"><div>Current filters:</div><div><span class="ewFilterCaption">INSTRUCTOR</span><span class="ewFilterValue">"INSTRUCTOR" = 'Dobyns, Stephen'</span></div></div></td></tr></table>
+<table cellspacing="0" class="ewGrid"><tr>
+	<td class="ewGridContent">
+<!-- Report grid (begin) -->
+<div class="ewGridMiddlePanel">
+<table cellspacing="0" class="ewTable ewTableSeparate">
+<thead>
+	<!-- Table header -->
+	<tr>
+<td data-field="INSTRUCTOR" class="ewTableHeader">
+	<table class="ewTableHeaderBtn"><tr>
+		<td style="vertical-align: bottom;">INSTRUCTOR</td>
+	</tr></table>
+</td>
+<td data-field="TERM_CODE" class="ewTableHeader">
+	<table class="ewTableHeaderBtn"><tr>
+		<td style="vertical-align: bottom;">TERM</td>
+	</tr></table>
+</td>
+<td data-field="COURSE" class="ewTableHeader">
+	<table class="ewTableHeaderBtn"><tr>
+		<td style="vertical-align: bottom;">COURSE</td>
+	</tr></table>
+</td>
+<td data-field="A" class="ewTableHeader">
+	<table class="ewTableHeaderBtn"><tr><td>A (SUM)</td></tr></table>
+</td>
+<td data-field="B" class="ewTableHeader">
+	<table class="ewTableHeaderBtn"><tr><td>B (SUM)</td></tr></table>
+</td>
+<td data-field="C" class="ewTableHeader">
+	<table class="ewTableHeaderBtn"><tr><td>C (SUM)</td></tr></table>
+</td>
+<td data-field="D" class="ewTableHeader">
+	<table class="ewTableHeaderBtn"><tr><td>D (SUM)</td></tr></table>
+</td>
+<td data-field="F" class="ewTableHeader">
+	<table class="ewTableHeaderBtn"><tr><td>F (SUM)</td></tr></table>
+</td>
+<td data-field="S" class="ewTableHeader">
+	<table class="ewTableHeaderBtn"><tr><td>S (SUM)</td></tr></table>
+</td>
+<td data-field="U" class="ewTableHeader">
+	<table class="ewTableHeaderBtn"><tr><td>U (SUM)</td></tr></table>
+</td>
+<td data-field="_I" class="ewTableHeader">
+	<table class="ewTableHeaderBtn"><tr><td>I (SUM)</td></tr></table>
+</td>
+<td data-field="W" class="ewTableHeader">
+	<table class="ewTableHeaderBtn"><tr><td>W (SUM)</td></tr></table>
+</td>
+<td data-field="V" class="ewTableHeader">
+	<table class="ewTableHeaderBtn"><tr><td>V (SUM)</td></tr></table>
+</td>
+<td data-field="TOTAL" class="ewTableHeader">
+	<table class="ewTableHeaderBtn"><tr><td>TOTAL (SUM)</td></tr></table>
+</td>
+	</tr>
+</thead>
+<tbody>
+	<tr>
+		<td data-field="INSTRUCTOR" class="ewRptGrpField1">
+<span>Dobyns, Stephen</span></td>
+		<td data-field="TERM_CODE" class="ewRptGrpField2">
+<span>200302 - 2003 Spring</span></td>
+		<td data-field="COURSE" class="ewRptGrpSummary3">
+<span><a href="#LCC3204L281" data-toggle="modal"><i class="icon-question-sign pull-left" style="margin-right: 3px;"></i><strong>LCC 3204 L2</strong></a><div id="LCC3204L281" class="modal hide fade"><div class="modal-header"><h3>Course Details: LCC 3204 L2</h3></div><div class="modal-body"><p><strong>Subject description:</strong> <h5>Lit, Communication & Culture</h5></p><p><strong>Course Title:</strong> <h5>Poetry and Poetics</h5></p><p><strong>Level:</strong> <h5>Upper</h5></p></div><div class="modal-footer"><button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button></div></div></span>&nbsp;<span class="ewDetailCount">(1 detail records)</span></td>
+		<td data-field="A" class="ewTableRow">
+<span>13</span></td>
+		<td data-field="B" class="ewTableRow">
+<span>0</span></td>
+		<td data-field="C" class="ewTableRow">
+<span>0</span></td>
+		<td data-field="D" class="ewTableRow">
+<span>0</span></td>
+		<td data-field="F" class="ewTableRow">
+<span>0</span></td>
+		<td data-field="S" class="ewTableRow">
+<span>0</span></td>
+		<td data-field="U" class="ewTableRow">
+<span>0</span></td>
+		<td data-field="_I" class="ewTableRow">
+<span>0</span></td>
+		<td data-field="W" class="ewTableRow">
+<span>1</span></td>
+		<td data-field="V" class="ewTableRow">
+<span>0</span></td>
+		<td data-field="TOTAL" class="ewTableRow">
+<span>14</span></td>
+	</tr>
+	<tr>
+		<td data-field="INSTRUCTOR" class="ewRptGrpField1">
+<span>&nbsp;</span></td>
+		<td data-field="TERM_CODE" class="ewRptGrpField2">
+<span>&nbsp;</span></td>
+		<td data-field="COURSE" class="ewRptGrpSummary3">
+<span><a href="#LCC3823B78" data-toggle="modal"><i class="icon-question-sign pull-left" style="margin-right: 3px;"></i><strong>LCC 3823 B</strong></a><div id="LCC3823B78" class="modal hide fade"><div class="modal-header"><h3>Course Details: LCC 3823 B</h3></div><div class="modal-body"><p><strong>Subject description:</strong> <h5>Lit, Communication & Culture</h5></p><p><strong>Course Title:</strong> <h5>Special Topics Lit/Cult</h5></p><p><strong>Level:</strong> <h5>Upper</h5></p></div><div class="modal-footer"><button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button></div></div></span>&nbsp;<span class="ewDetailCount">(1 detail records)</span></td>
+		<td data-field="A" class="ewTableAltRow">
+<span>3</span></td>
+		<td data-field="B" class="ewTableAltRow">
+<span>0</span></td>
+		<td data-field="C" class="ewTableAltRow">
+<span>0</span></td>
+		<td data-field="D" class="ewTableAltRow">
+<span>0</span></td>
+		<td data-field="F" class="ewTableAltRow">
+<span>1</span></td>
+		<td data-field="S" class="ewTableAltRow">
+<span>0</span></td>
+		<td data-field="U" class="ewTableAltRow">
+<span>0</span></td>
+		<td data-field="_I" class="ewTableAltRow">
+<span>0</span></td>
+		<td data-field="W" class="ewTableAltRow">
+<span>0</span></td>
+		<td data-field="V" class="ewTableAltRow">
+<span>0</span></td>
+		<td data-field="TOTAL" class="ewTableAltRow">
+<span>4</span></td>
+	</tr>
+	<tr>
+		<td data-field="INSTRUCTOR" class="ewRptGrpField1">
+<span>&nbsp;</span></td>
+		<td data-field="TERM_CODE" class="ewRptGrpSummary2">
+<span>200302 - 2003 Spring</span>&nbsp;<span class="ewDetailCount">(2 detail records)</span></td>
+		<td data-field="COURSE" class="ewRptGrpSummary2">&nbsp;</td>
+		<td data-field="A" class="ewRptGrpSummary2">
+<span>16</span></td>
+		<td data-field="B" class="ewRptGrpSummary2">
+<span>0</span></td>
+		<td data-field="C" class="ewRptGrpSummary2">
+<span>0</span></td>
+		<td data-field="D" class="ewRptGrpSummary2">
+<span>0</span></td>
+		<td data-field="F" class="ewRptGrpSummary2">
+<span>1</span></td>
+		<td data-field="S" class="ewRptGrpSummary2">
+<span>0</span></td>
+		<td data-field="U" class="ewRptGrpSummary2">
+<span>0</span></td>
+		<td data-field="_I" class="ewRptGrpSummary2">
+<span>0</span></td>
+		<td data-field="W" class="ewRptGrpSummary2">
+<span>1</span></td>
+		<td data-field="V" class="ewRptGrpSummary2">
+<span>0</span></td>
+		<td data-field="TOTAL" class="ewRptGrpSummary2">
+<span>18</span></td>
+	</tr>
+	<tr>
+		<td data-field="INSTRUCTOR" class="ewRptGrpSummary1">
+<span>Dobyns, Stephen</span>&nbsp;<span class="ewDetailCount">(2 detail records)</span></td>
+		<td data-field="TERM_CODE" class="ewRptGrpSummary1">&nbsp;</td>
+		<td data-field="COURSE" class="ewRptGrpSummary1">&nbsp;</td>
+		<td data-field="A" class="ewRptGrpSummary1">
+<span>16</span></td>
+		<td data-field="B" class="ewRptGrpSummary1">
+<span>0</span></td>
+		<td data-field="C" class="ewRptGrpSummary1">
+<span>0</span></td>
+		<td data-field="D" class="ewRptGrpSummary1">
+<span>0</span></td>
+		<td data-field="F" class="ewRptGrpSummary1">
+<span>1</span></td>
+		<td data-field="S" class="ewRptGrpSummary1">
+<span>0</span></td>
+		<td data-field="U" class="ewRptGrpSummary1">
+<span>0</span></td>
+		<td data-field="_I" class="ewRptGrpSummary1">
+<span>0</span></td>
+		<td data-field="W" class="ewRptGrpSummary1">
+<span>1</span></td>
+		<td data-field="V" class="ewRptGrpSummary1">
+<span>0</span></td>
+		<td data-field="TOTAL" class="ewRptGrpSummary1">
+<span>18</span></td>
+	</tr>
+</tbody>
+<tfoot>
+	</tfoot>
+</table>
+</div>
+</td></tr></table>
+</div>
+<!-- Summary Report Ends -->
+	</div></td>
+	<!-- Center Container - Report (End) -->
+	<!-- Right Container (Begin) -->
+	<td style="vertical-align: top;"><div id="ewRight" class="phpreportmaker">
+	<!-- Right slot -->
+	</div></td>
+	<!-- Right Container (End) -->
+</tr>
+<!-- Bottom Container (Begin) -->
+<tr><td colspan="3"><div id="ewBottom" class="phpreportmaker">
+	<!-- Bottom slot -->
+	</div></td></tr>
+<!-- Bottom Container (End) -->
+</table>
+<!-- Table Container (End) -->
+<script type="text/javascript">
+
+// Write your table-specific startup script here
+// document.write("page loaded");
+
+</script>
+<script type="text/javascript">
+ewr_Select("table." + EWR_TABLE_CLASSNAME, document, ewr_SetupTable); // Init tables
+ewr_Select("table." + EWR_GRID_CLASSNAME, document, ewr_SetupGrid); // Init grids
+</script>
+<div id="ewrLoadingDiv" style="visibility: hidden;"></div>
+<div id="ewrDrillDownDiv" style="visibility: hidden;"><div class="ft"></div></div>
+<script type="text/javascript">
+ewr_InitLoadingPanels(); // Init loading panels / dialogs
+</script>
+		</div> <!--span12-->
+	</div> <!--row-fluid-->
+</div> <!--container-->
+<div class="container">
+	<div class="navbar navbar-static-bottom">
+        <div class="row-fluid">
+    		<div class="span12">	
+                <hr>
+                <p class="pull-right"><a href="#top">Back to top</a></p>
+            	<p><small><strong>Self Service Reporting</strong></small> <br/>
+            	<small>&copy; 2015 Georgia Institute of Technology<br/></small>
+            	<small><a href="http://irp.gatech.edu" target="_blank"><strong>Institutional Research and Planning</strong></a></small><br/>
+                </p>
+			</div>
+		</div>
+	</div>
+</div> <!--container-->
+<div id="modalAbout" class="modal hide fade">
+	<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>About</h3>
+  	</div>
+  	<div class="modal-body">
+    	<p>The <strong>Office of Institutional Research and Planning</strong> is responsible for the development and maintenance of data resources to support the strategic planning and policy-making processes at Georgia Tech.</p> <p>IRP facilitates the flow of accurate, timely information and assists all levels of management in defining issues, selecting research designs, obtaining information and interpreting results.</p>
+        <p>Sandi Bramblett, <strong>Executive Director</strong><br>
+		Cassandra Spiller-Belton, <strong>Director</strong></p>
+		<p><a class="btn btn-info" href="http://www.irp.gatech.edu/about-irp/contact-us/" target="_blank">Contact Us</a></p>
+  	</div>
+  	<div class="modal-footer">
+    	<a href="#" class="btn" data-dismiss="modal">Close</a>
+  	</div>
+</div> <!-- modalAbout -->
+</body>
+</html>

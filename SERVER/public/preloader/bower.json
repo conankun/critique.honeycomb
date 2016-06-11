@@ -1,0 +1,20 @@
+{
+  "name": "css-loading",
+  "version": "1.4.0",
+  "description": "Pure css loading animations.",
+  "location": "https://github.com/jovey-zheng/loader",
+  "homepage": "http://jovey-zheng.github.io/loader",
+  "main": [
+    "loaders.min.css"
+  ],
+  "description": "Pure css loading animations.",
+  "authors": [
+    "jovey-zheng <jovey.zheng@gmail.com>"
+  ],
+  "keywords": [
+    "css",
+    "loader",
+    "animation"
+  ],
+  "license": "MIT",
+}

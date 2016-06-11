@@ -1,0 +1,265 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset='utf8'>
+		<title>HoneyComb Critique</title>
+		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="description" content="<%= description %>">
+		<meta name="keywords" content="<%= keywords %>">
+		<meta name="author" content="<%= author %>">
+		
+		<link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.css">
+		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/preloader/loaders.css">
+		<link href="/fontawesome/css/font-awesome.css" rel="stylesheet" type="text/css" media="screen,projection"/>
+		
+
+		<script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.10/webfont.js"></script>
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script src="/table_sort/stupidtable.js"></script>
+		<script src="/bootstrap/js/bootstrap.js"></script>
+
+		<script type="text/javascript">
+		  WebFont.load({
+		 
+		    // For google fonts
+		    google: {
+		      families: ['Droid Sans', 'Droid Serif']
+		    }
+		    // For early access or custom font
+		    custom: {
+		        families: ['Nanum Gothic'],
+		        urls: ['http://fonts.googleapis.com/earlyaccess/nanumgothic.css']
+		    }
+		 
+		  });
+		</script>
+		<style>
+			
+		body {
+			font-family: "Nanum Gothic", sans-serif;
+		}
+		.fa-question-circle {
+			cursor: pointer;	
+		}
+		
+		h1 > a:visited {
+			color: black;
+		}
+		h1 > a:link {
+			color: black;
+		}
+		</style>
+		
+		<script>
+			$(function() {
+				var table = $("table").stupidtable();
+				table.on("aftertablesort", function (event, data) {
+		          var th = $(this).find("th");
+		          th.find(".arrow").remove();
+		          var dir = $.fn.stupidtable.dir;
+		
+		          var arrow = data.direction === dir.ASC ? "&uarr;" : "&darr;";
+		          th.eq(data.column).append('<span class="arrow">' + arrow +'</span>');
+		        });
+
+			});
+		</script>
+		<script type="text/javascript" src="/js/chart.js"></script>
+		<script type="text/javascript">
+		$(function () {
+		  $('[data-toggle="tooltip"]').tooltip()
+		});
+	      <%
+			var A = 0;
+			var B = 0;
+			var C = 0;
+			var D = 0;
+			var F = 0;
+			var W = 0;
+			var S = 0;
+			var U = 0;
+			var total_students = 0;
+						
+			result.forEach(function(each) {
+				total_students += each.A + each.B + each.C + each.D + each.F + each.W + each.V + each.I + each.S + each.U;
+				A += each.A;
+				B += each.B;
+				C += each.C;
+				D += each.D;
+				F += each.F;
+				W += each.W;
+				S += each.S;
+				U += each.U;
+		 }); 
+		 	var avg_gpa = (A*4 + B*3 + C*2 + D);
+		 	if((A + B + C + D + F) == 0) avg_gpa = "N/A";
+		 	else {
+			 	avg_gpa = avg_gpa / (A + B + C + D + F);
+			 	avg_gpa = Math.round(avg_gpa * 100) / 100;
+		 	}
+		 %>
+	      function drawChart() {
+			$('#preloader1').css('display', 'none');
+			<% if (A+B+C+D+F > 0) { %>
+		     $(function(){
+			  $("#piechart1").drawPieChart([
+			    { title: "A", value : <%= parseInt(Math.round(A/(A+B+C+D+F) * 100) / 100 * 100) %>, color: "#3669C9" },
+			    { title: "B", value: <%= parseInt(Math.round(B/(A+B+C+D+F) * 100) / 100 * 100) %>, color: "#DA3B21" },
+			    { title: "C", value: <%= parseInt(Math.round(C/(A+B+C+D+F) * 100) / 100 * 100) %>, color: "#FD9827" },
+			    { title: "D", value: <%= parseInt(Math.round(D/(A+B+C+D+F) * 100) / 100 * 100) %>, color: "#1D9524" },
+			    { title: "F", value: <%= parseInt(Math.round(F/(A+B+C+D+F) * 100) / 100 * 100) %>, color: "#971497" }
+			  ]);
+			});  
+	        <% } else {%>
+		    $('#piechart1').html("No data to plot");
+		    <% } %>
+	
+		        
+	      }
+	      
+	      function drawChart2() {
+		    $('#preloader2').css('display', 'none');
+			<% if (S+U > 0) { %>
+		     $(function(){
+			  $("#piechart2").drawPieChart([
+			    { title: "Pass", value : <%= parseInt(Math.round(S/(S+U) * 100) / 100 * 100) %>, color: "#3669C9" },
+			    { title: "Fail", value: <%= parseInt(Math.round(U/(S+U) * 100) / 100 * 100) %>, color: "#DA3B21" }
+			  ]);
+			});  
+	        <% } else {%>
+		    $('#piechart2').html("No data to plot");
+		    <% } %>
+	      }
+	      $(document).ready(function() {
+			 drawChart();
+			 drawChart2(); 
+		  });
+	      $(window).resize(function() {
+		      drawChart();
+		      drawChart2();
+	      });
+	    </script>
+	</head>
+	
+	<body>
+		<div class="container">
+			<nav class="navbar navbar-default navbar-fixed-top">
+				<div class="container-fluid">
+					<div class="navbar-header">
+				      
+				      <a class="navbar-brand" href="/">Honeycomb Critique</a>
+				    </div>
+				</div>
+			</nav>
+			<div class="row" style="margin-top: 30px; padding-top: 50px;">
+				<div class="col-xs-12" style="text-align: center;" align="middle">
+					<h1><a href="/course/<%= course.toUpperCase() %>"><%= course.toUpperCase() %></a>&nbsp;/&nbsp;<a href="/instructor/<%= instructor %>"><%= instructor %></a></h1>
+					<h5>GPA: <%= avg_gpa %></h5>
+				</div>
+				<div style="text-align: center;" class='<% if(A+B+C+D+F > 0) {%>col-xs-12<%}else{%>hidden-xs hidden-sm<%}%> col-md-6' align="middle">
+					<div style="font-weight: bold;font-size: 21px;">
+						Letter Grade
+					</div>
+					<div id="piechart1" style="height:300px;line-height:300px;vertical-align: middle;overflow: hidden;">
+						<div id="preloader1" class="slice" style="margin-top: 112px; margin-bottom: 112px; display: inline-block;"><div data-loader="satellite"></div></div>
+					</div>
+				</div>
+				
+				<div style="text-align: center;"  class='<%if(A+B+C+D+F == 0) {%>col-xs-12<%}else{%>hidden-xs hidden-sm<%}%> col-md-6' align="middle">
+					<div style="font-weight: bold;font-size: 21px;">
+						Pass / Fail
+					</div>
+					<div id="piechart2" style="height:300px;line-height:300px;vertical-align: middle;overflow: hidden;">
+						<div id="preloader2" class="slice" style="margin-top: 112px; margin-bottom: 112px; display: inline-block;"><div data-loader="satellite"></div></div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<table id="tablesorter" class="table table-bordered table-striped table-hover">
+						<thead>
+						<tr>
+							<th class="col-xs-3 col-md-1" data-sort="string">Section</th>
+							<th class="col-xs-3 col-md-2" data-sort="int">Term</th>
+							<th class="col-xs-3 col-md-1" data-sort="float">GPA</th>
+							<th class="hidden-xs hidden-sm col-md-1" data-sort="int">A% <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="The percentage of students who got an A in the class with letter grade mode without dropping the class." aria-hidden="true"></i></th>
+							<th class="hidden-xs hidden-sm col-md-1" data-sort="int">B% <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="The percentage of students who got a B in the class with letter grade mode without dropping the class." aria-hidden="true"></i></th>
+							<th class="hidden-xs hidden-sm col-md-1" data-sort="int">C% <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="The percentage of students who got a C in the class with letter grade mode without dropping the class." aria-hidden="true"></i></th>
+							<th class="hidden-xs hidden-sm col-md-1" data-sort="int">D% <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="The percentage of students who got a D in the class with letter grade mode without dropping the class." aria-hidden="true"></i></th>
+							<th class="hidden-xs hidden-sm col-md-1" data-sort="int">F% <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="The percentage of students who got a F in the class with letter grade mode without dropping the class." aria-hidden="true"></i></th>
+						
+							<th class="col-xs-3 col-md-1" data-sort="float">S% <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="The percentage of students who passed the class with pass fail grade mode without dropping the class." aria-hidden="true"></i></th>
+							
+							<th class="hidden-xs hidden-sm col-md-1" data-sort="int">W% <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="The percentage of students who dropped the class. This includes students who were in letter grade mode, pass/fail mode, or audit mode."></i></th>
+							<th class="hidden-xs hidden-sm col-md-1" data-sort="int">Class Size</th>
+						</tr>
+						</thead>
+						<tbody>
+						
+						<% result.forEach(function(each) { 
+							var classize = each.A + each.B + each.C + each.D + each.F + each.W + each.V + each.I + each.S + each.U;
+							var total = each.A + each.B + each.C + each.D + each.F;
+							var term = "";
+							
+							if(each.term[5] == '2' || each.term[5] == '3') {
+								term = "Spring ";
+							} else if(each.term[5] == '5' || each.term[5] == '6') {
+								term = "Summer ";
+							} else if(each.term[5] == '8' || each.term[5] == '9') {
+								term = "Fall ";
+							} else if(each.term[5] == '1') {
+								term = "Winter ";
+							}
+							for(var i=0; i < 4;i++) {
+								term += each.term[i];
+							}
+							if(each.A + each.B + each.C + each.D + each.F + each.W == 0) {
+								
+							} else {
+								var gpa = each.A * 4 + each.B * 3 + each.C * 2 + each.D * 1 + each.F * 0;
+								if((each.A + each.B + each.C + each.D + each.F) == 0) gpa = "N/A";
+								else {
+									gpa = gpa / (each.A + each.B + each.C + each.D + each.F);
+									gpa = Math.round(gpa * 100) / 100;
+								}
+						%>
+						<tr>
+							<td class="col-xs-3 col-md-1"><%= each.section %></td>
+							<td class="col-xs-3 col-md-2" data-sort-value="<%= each.term %>"><%= term %></td>
+							<td class="col-xs-3 col-md-1"><%= gpa %></td>
+							<td class="hidden-xs hidden-sm col-md-1"><%= total == 0 ? "N/A" : parseInt(each.A / total * 100) %>%</td>
+							<td class="hidden-xs hidden-sm col-md-1"><%= total == 0 ? "N/A" : parseInt(each.B / total * 100) %>%</td>
+							<td class="hidden-xs hidden-sm col-md-1"><%= total == 0 ? "N/A" : parseInt(each.C / total * 100) %>%</td>
+							<td class="hidden-xs hidden-sm col-md-1"><%= total == 0 ? "N/A" : parseInt(each.D / total * 100) %>%</td>
+							<td class="hidden-xs hidden-sm col-md-1"><%= total == 0 ? "N/A" : parseInt(each.F / total * 100) %>%</td>
+						
+							<td class="col-xs-3 col-md-1"><%= (each.S + each.U) == 0 ? "N/A" : parseInt(each.S / (each.S + each.U) * 100) %>%</td>
+							<td class="hidden-xs hidden-sm col-md-1"><%= (classize) == 0 ? "0" :  parseInt(each.W / classize * 100) %>%</td>
+							<td class="hidden-xs hidden-sm col-md-1"><%= classize %></td>
+						</tr>
+						<% 
+							}
+						}); %>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+			<div class="col-xs-12">
+				<div id="disqus_thread"></div> <script type="text/javascript">var disqus_shortname = 'critiquehoneycomb';var disqus_identifier = "<%= course %>/<%=instructor%>";var disqus_title = "<%= course %>/<%=instructor%>";var disqus_config = function() {this.page.api_key = "5biUzLxKoWoxfDb5FY0Sq6v1H56Ycg7BJMp215D25ylyUjp1q1nIHUBIHyQhr4ej";};(function() {var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);})();</script> <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript> <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+			</div>
+		</div>
+		
+		<nav class="navbar navbar-default navbar-fixed-bottom">
+			<div class="container" style="line-height:70px;height:70px;vertical-alignment: middle;">
+				© 2016 Junghyun Kim 
+			</div>
+  		</nav>
+  		
+		<script>
+			
+		</script>
+	</body>
+
+</html>
