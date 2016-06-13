@@ -223,9 +223,9 @@ app.post("/instructor_list_ajax", function(req, res) {
 			} else {
 				var query = "";
 				if(ind > -1) {
-					query = "select courseDept, courseNum from grade_distribution";
+					query = "select courseDept, courseNum from course";
 				} else {
-					query = "select instructor from grade_distribution";
+					query = "select instructor from instructor";
 				}
 				for (var i=0;i < search.length; i++) {
 					if(i == 0) query += " where";
@@ -242,9 +242,9 @@ app.post("/instructor_list_ajax", function(req, res) {
 					}
 				} 
 				if(ind > -1) {
-					query += " group by courseDept, courseNum limit 0,10"; 
+					query += " limit 0,10"; 
 				} else {
-					query += " group by instructor limit 0,10";
+					query += " limit 0,10";
 				}
 				con.query(query, function(err, result, fields) {
 					con.release();con.destroy();

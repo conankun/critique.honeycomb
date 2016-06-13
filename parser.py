@@ -122,4 +122,65 @@ def ParseInfo():
         f2.close()
     f.close()
     db.close()
-ParseInfo()
+def parseCourseName():
+    f = open('courselist.txt', 'r')
+    db = MySQLdb.connect("localhost","root","~!Honeycomb0904!@","honeycomb_critique")
+    cursor = db.cursor()
+    cnt = 0
+    s = requests.session()
+    while True:
+        cnt += 1
+        line = f.readline()
+        if cnt <= 1031:
+            continue
+        if not line:
+            break
+        line = line.strip()
+        courseDept = line.split(' ')[0]
+        courseNum = line.split(' ')[1]
+        url = 'https://oscar.gatech.edu/pls/bprod/bwckctlg.p_disp_course_detail?cat_term_in=201608&subj_code_in='+courseDept+'&crse_numb_in='+courseNum
+        while True:
+            try:
+                response = s.get(url)
+                soup = bs4.BeautifulSoup(response.text, 'html.parser')
+                codes = soup.select('.nttitle')
+                courseTitle = str(codes[0]).split(" - ")[1].split("</td>")[0]
+                print str(cnt) + " " + (courseTitle)
+                sql = "update course SET title= %s where courseDept = %s and courseNum = %s"
+                courseData = [courseTitle, courseDept, courseNum]
+                courseDataTuple = tuple(courseData)
+                try:
+                    # Execute the SQL command
+                    cursor.execute(sql, courseDataTuple)
+                    # Commit your changes in the database
+                    db.commit()
+                except Exception, e:
+                    print(e)
+                    print("db error")
+                    db.rollback()
+            except Exception, e:
+                print ("error occured. looking for 1998 catalog.")
+                url = 'https://oscar.gatech.edu/pls/bprod/bwckctlg.p_disp_course_detail?cat_term_in=199802&subj_code_in='+courseDept+'&crse_numb_in='+courseNum
+                response = s.get(url)
+                soup = bs4.BeautifulSoup(response.text, 'html.parser')
+                codes = soup.select('.nttitle')
+                courseTitle = str(codes[0]).split(" - ")[1].split("</td>")[0]
+                print str(cnt) + " " + (courseTitle)
+                sql = "update course SET title= %s where courseDept = %s and courseNum = %s"
+                courseData = [courseTitle, courseDept, courseNum]
+                courseDataTuple = tuple(courseData)
+                try:
+                    # Execute the SQL command
+                    cursor.execute(sql, courseDataTuple)
+                    # Commit your changes in the database
+                    db.commit()
+                except Exception, e:
+                    print(e)
+                    print("db error")
+                    db.rollback()
+            else:
+                break
+    db.close()
+    f.close()
+
+parseCourseName()
