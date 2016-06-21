@@ -154,9 +154,11 @@
 				    </div>
 				</div>
 			</nav>
+			
 			<div class="row" style="margin-top: 30px; padding-top: 50px;">
+			
 				<div class="col-xs-12" style="text-align: center;" align="middle">
-					<h1><a href="/course/<%= course.toUpperCase() %>"><%= course.toUpperCase() %></a>&nbsp;/&nbsp;<a href="/instructor/<%= instructor %>"><%= instructor %></a></h1>
+					<h1><a href="/course/<%= course.toUpperCase() %>"><%= course.toUpperCase() %></a>&nbsp;/&nbsp;<a href="/instructor/<%= instructor %>"><%= instructor %></a></h1><h4 style="color: gray;"><%= title.replace("amp;", "") %></h4>
 					<h5>GPA: <%= avg_gpa %></h5>
 				</div>
 				<div style="text-align: center;" class='<% if(A+B+C+D+F > 0) {%>col-xs-12<%}else{%>hidden-xs hidden-sm<%}%> col-md-6' align="middle">
@@ -214,7 +216,7 @@
 							for(var i=0; i < 4;i++) {
 								term += each.term[i];
 							}
-							if(each.A + each.B + each.C + each.D + each.F + each.W == 0) {
+							if(each.A + each.B + each.C + each.D + each.F + each.S + each.U + each.W == 0) {
 								
 							} else {
 								var gpa = each.A * 4 + each.B * 3 + each.C * 2 + each.D * 1 + each.F * 0;

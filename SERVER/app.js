@@ -60,6 +60,16 @@ var db_config = {
 };
 var pool = mysql.createPool(db_config);
 
+//prevent mysql connection from being lost.
+function keepAlive(){
+   pool.getConnection(function(err, connection){
+     if(err) { return; }
+	 connection.ping();
+     connection.release();
+   });
+ }
+ setInterval(keepAlive, 60*1000);
+
 function requireHTTPS(req, res, next) {
     if (!req.secure) {
         //FYI this should work for local development as well
@@ -129,18 +139,28 @@ app.get("/course/:course", function(req, res) {
 			} else {
 				var query = "select instructor, term, courseDept, courseNum, section, A, B, C, D, F, S, U, W, I, V from grade_distribution where courseDept=? and courseNum=? order by term desc, section asc";
 				con.query(query, [sp[0], sp[1]], function(err, result, fields) {
-					con.release();con.destroy();
 					if(err) {
 						console.log(err);
 						res.end("Unknown error has occured.");
 					} else {
-						res.render("course", {
-							description: meta_description,
-							author: meta_author,
-							keywords: meta_keywords,
-							result: result,
-							title: course
-						});		
+						query = "select title from course where courseDept=? and courseNum=?";
+						con.query(query, [sp[0], sp[1]], function(err4, result4, fields4) {
+							con.release();con.destroy();
+							if(err4) {
+								console.log(err4);
+								res.end("Unknown error has occured.");
+							} else {
+
+								res.render("course", {
+									description: meta_description,
+									author: meta_author,
+									keywords: meta_keywords,
+									result: result,
+									title: course,
+									title2: result4.length > 0 ? result4[0].title : ""
+								});		
+							}
+						});
 					}
 				});
 			}
@@ -159,26 +179,68 @@ app.get("/course/:course/:instructor", function(req, res) {
 			} else {
 				var query = "select instructor, term, courseDept, courseNum, section, A, B, C, D, F, S, U, W, I, V from grade_distribution where courseDept=? and courseNum=? and instructor=? order by term desc, section asc";
 				con.query(query, [sp[0], sp[1], instructor], function(err, result, fields) {
-					con.release();con.destroy();
 					if(err) {
 						console.log(err);
 						res.end("Unknown error has occured.");
 					} else {
+						query = "select title from course where courseDept=? and courseNum=?";
 						
-						res.render("course2", {
-							description: meta_description,
-							author: meta_author,
-							keywords: meta_keywords,
-							result: result,
-							course: course,
-							instructor: instructor
-						});		
+						con.query(query, [sp[0], sp[1]], function(err4, result4, fields4) {
+							con.release();con.destroy();
+							if(err4) {
+								console.log(err4);
+								res.end("Unknown error has occured.");
+							} else {
+								res.render("course2", {
+									description: meta_description,
+									author: meta_author,
+									keywords: meta_keywords,
+									result: result,
+									course: course,
+									instructor: instructor,
+									title: result4.length > 0 ? result4[0].title : ""
+								});	
+							}
+						});
 					}
 				});
 			}
 	});
 });
+/*
+app.get("/test_admin", function(req, res) {
+	res.setHeader('Content-Type', 'text/html');
+	pool.getConnection(function(err2, con) {
+			if(err2) {
+				//con.release();
+				console.log(err2);
+				res.end();
+			} else {
+				con.query("select * from course", function(err, result, fields) {
+					con.release();con.destroy();
+					if(err){ 
+						console.log(err);
+						console.log('query error');
+						res.end();
+					} else {
+						var cnt =0;
+						result.forEach(function(each) {
+							cnt++;
+							
+							res.write(each.courseDept + " " + each.courseNum + "<br>");
+							
+							if(cnt == result.length) {
+								res.end();
+							}
+							
+						});
+					}
+				});
+			}
+		});
 
+});
+*/
 app.post("/instructor_list_ajax", function(req, res) {
 	var input = req.param("search");
 	
@@ -223,7 +285,7 @@ app.post("/instructor_list_ajax", function(req, res) {
 			} else {
 				var query = "";
 				if(ind > -1) {
-					query = "select courseDept, courseNum from course";
+					query = "select courseDept, courseNum, title from course";
 				} else {
 					query = "select instructor from instructor";
 				}
@@ -242,7 +304,8 @@ app.post("/instructor_list_ajax", function(req, res) {
 					}
 				} 
 				if(ind > -1) {
-					query += " limit 0,10"; 
+					
+					query += " order by courseDept, courseNum asc limit 0,10"; 
 				} else {
 					query += " limit 0,10";
 				}
@@ -269,7 +332,7 @@ app.post("/instructor_list_ajax", function(req, res) {
 								}
 								if(ind > -1) {
 									//course
-									res.write("<a href='/course/"+target+"'>"+target + "</a><br>");	
+									res.write("<a href='/course/"+target+"'>"+target + " "+ each.title + "</a><br>");	
 								} else {
 									//instructor
 									res.write("<a href='/instructor/"+target+"'>"+target + "</a><br>");	
